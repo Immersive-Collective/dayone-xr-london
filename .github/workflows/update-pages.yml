@@ -1,0 +1,29 @@
+name: Update immersive-collective.github.io submodule
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-submodule:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout dayone-xr-london
+        uses: actions/checkout@v3
+
+      - name: Clone immersive-collective.github.io
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git clone --recurse-submodules https://x-access-token:${{ secrets.PAGES_TOKEN }}@github.com/Immersive-Collective/immersive-collective.github.io.git
+          cd immersive-collective.github.io
+
+          cd projects/dayone-xr-london
+          git pull origin main
+          cd ../..
+
+          git add projects/dayone-xr-london
+          git commit -m "🔄 Auto-update dayone-xr-london submodule"
+          git push
